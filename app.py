@@ -2,12 +2,31 @@ import streamlit as st
 import cv2
 import torch
 import numpy as np
+import os
+import requests
 from PIL import Image
 from torchvision.models import resnet50
 import torchvision.transforms as transforms
 
-# Paths
-MODEL_PATH = "./models/apple_detection_model.pth"
+# Google Drive Model URL (replace FILE_ID with your file ID from the Google Drive link)
+MODEL_URL = "https://drive.google.com/uc?id=1PkYKM66Q6RoQgCQmX0m7lgvj_PileKeR"
+MODEL_PATH = "apple_detection_model .pth"
+
+# Function to download the model file
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        print("Downloading model...")
+        response = requests.get(MODEL_URL, stream=True)
+        with open(MODEL_PATH, "wb") as f:
+            for chunk in response.iter_content(chunk_size=1024):
+                if chunk:
+                    f.write(chunk)
+        print("Download complete.")
+
+# Ensure the model is downloaded
+download_model()
+
+# Class names
 CLASS_NAMES = [
     "apple_6", "apple_braeburn_1", "apple_crimson_snow_1", "apple_golden_1", "apple_golden_2",
     "apple_golden_3", "apple_granny_smith_1", "apple_hit_1", "apple_pink_lady_1", "apple_red_1",
